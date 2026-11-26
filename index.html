@@ -370,6 +370,51 @@ ul{list-style:none;margin:0;padding:0}
 .status .p{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
 .dash-foot{margin:14px 4px 0;font-size:10.5px;color:#96A197;font-weight:600;text-align:center;line-height:1.5}
 
+/* 공고 삭제 */
+.job-right{display:flex;align-items:center;gap:6px;flex:none}
+.job-del{
+  flex:none;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:7px;background:#FBFAF6;border:1px solid rgba(74,124,89,.14);
+  color:#A2AEA4;font-size:12px;font-weight:700;line-height:1;padding:0;
+  transition:.18s ease;
+}
+.job-del:hover{background:#FBEBE4;border-color:rgba(176,87,63,.28);color:#B0573F}
+.job-del:active{transform:scale(.9)}
+.job-del:focus-visible{outline:2px solid #7FB069;outline-offset:2px}
+.jobs-empty{
+  padding:26px 16px;border-radius:var(--r-md);text-align:center;
+  background:#FBFAF5;border:1px dashed rgba(74,124,89,.18);
+  font-size:11px;line-height:1.6;font-weight:600;color:#93A096;
+}
+.deleted-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:12px 2px 0;padding:9px 12px;border-radius:12px;
+  background:#F6F7F2;border:1px dashed rgba(74,124,89,.2);
+  font-size:10.5px;font-weight:700;color:#7D8A80;
+}
+.deleted-bar[hidden]{display:none}
+.deleted-bar button{
+  flex:none;border:0;background:none;padding:2px 0;cursor:pointer;
+  font-size:10.5px;font-weight:800;color:#4A7C59;text-decoration:underline;text-underline-offset:2px;
+}
+.toast{
+  position:fixed;left:50%;bottom:20px;z-index:95;
+  display:flex;align-items:center;gap:10px;
+  max-width:calc(100vw - 32px);padding:10px 10px 10px 14px;border-radius:14px;
+  background:rgba(45,62,52,.96);color:#fff;
+  font-size:11.5px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;
+  box-shadow:0 14px 32px -16px rgba(28,42,33,.95);
+  opacity:0;pointer-events:none;transform:translate(-50%,14px);
+  transition:opacity .24s ease,transform .24s ease;
+}
+.toast.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.toast span{overflow:hidden;text-overflow:ellipsis}
+.toast button{
+  flex:none;border:0;border-radius:8px;padding:5px 9px;cursor:pointer;
+  background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:800;
+}
+.toast button:active{background:rgba(255,255,255,.3)}
+
 /* ---------------- calendar ---------------- */
 .cal-card{
   padding:14px 14px 12px;border-radius:var(--r-lg);
@@ -546,6 +591,24 @@ ul{list-style:none;margin:0;padding:0}
   border-radius:5px;padding:1px 5px;height:16px;line-height:14px;
 }
 .reports .rs strong{color:#3A4C41;font-weight:800}
+.sheet-head p #shDept{color:#6E7F72}
+.staff{display:flex;flex-direction:column;gap:7px}
+.staff-card{
+  display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:12px;
+  background:#fff;border:1px solid rgba(74,124,89,.12);
+  box-shadow:0 6px 14px -20px rgba(50,70,50,.9), inset 0 1px 0 #fff;
+}
+.staff-ava{
+  width:30px;height:30px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:15px;
+  background:linear-gradient(150deg,#F5F9F0,#E9F1E3);border:1px solid rgba(74,124,89,.14);
+}
+.staff-txt{min-width:0}
+.staff-name{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;color:#33453A;letter-spacing:-.03em}
+.staff-role{
+  flex:none;font-size:9px;font-weight:800;color:#4A7C59;background:#EDF4E8;
+  border:1px solid rgba(74,124,89,.13);border-radius:5px;padding:1.5px 5px;letter-spacing:-.02em;
+}
+.staff-duty{margin:2.5px 0 0;font-size:10px;font-weight:600;color:#8A968D;line-height:1.42;letter-spacing:-.02em}
 textarea#memo{
   width:100%;min-height:64px;resize:none;padding:10px 11px;border-radius:11px;
   border:1px solid rgba(74,124,89,.16);background:#fff;font-size:12px;line-height:1.6;
@@ -755,7 +818,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
         </div>
       </div>
       <div class="hdr-actions">
-        <div class="badge"><span class="c">ㅊ</span>보들몽 지휘중<span class="live"></span></div>
+        <div class="badge"><span class="c">👑</span>밍밍 사장<span class="live"></span></div>
         <button class="lock-btn" id="lockBtn" type="button" aria-label="지금 바로 잠그기">🔒 잠그기</button>
       </div>
     </div>
@@ -773,13 +836,14 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     <section class="view on" id="view-map" role="tabpanel" aria-label="오피스 맵">
       <div class="greet">
         <p class="greet-kicker" id="todayLine">TODAY</p>
-        <h2>밍밍님, 오늘도 스튜디오는<br /><em>햇살 가득</em>이에요 ☀️</h2>
+        <h2>밍밍 사장님, 오늘도 스튜디오는<br /><em>햇살 가득</em>이에요 ☀️</h2>
         <div class="chips">
           <button class="motion" id="motionBtn" role="switch" aria-checked="true">
             <span class="sw"><i></i></span><span id="motionLabel">움직임 ON</span>
           </button>
-          <span class="chip">🏠 4개 공간 가동</span>
-          <span class="chip" id="charChip">👥 캐릭터 6명 ON</span>
+          <span class="chip">🏠 5개 공간 가동</span>
+          <span class="chip" id="charChip">👥 캐릭터 7명 ON</span>
+          <span class="chip">🌸 보들몽 비서실장</span>
         </div>
       </div>
 
@@ -850,14 +914,16 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
           <!-- 2) 공간(존) -->
           <div class="zones" id="zones">
-            <button class="zone" data-room="scout" aria-label="공고 탐색실 열기"
-              style="left:3.26%;top:15.33%;width:44.42%;height:25.67%"></button>
-            <button class="zone" data-room="greenhouse" aria-label="온실 라운지 열기"
-              style="left:50%;top:15.33%;width:46.74%;height:25.67%"></button>
-            <button class="zone" data-room="command" aria-label="보들몽 지휘실 열기"
-              style="left:22.33%;top:41.67%;width:55.35%;height:23.67%"></button>
-            <button class="zone" data-room="atelier" aria-label="보태니컬 아틀리에 열기"
-              style="left:3.26%;top:66.67%;width:93.49%;height:31%"></button>
+            <button class="zone" data-room="ceo" aria-label="밍밍 사장실 열기"
+              style="left:3.26%;top:15.33%;width:44.42%;height:25%"></button>
+            <button class="zone" data-room="secretary" aria-label="보들몽 비서실 열기"
+              style="left:50%;top:15.33%;width:46.74%;height:25%"></button>
+            <button class="zone" data-room="scout" aria-label="공고탐색부 열기"
+              style="left:3.26%;top:42%;width:44.42%;height:24.33%"></button>
+            <button class="zone" data-room="greenhouse" aria-label="운영지원부 열기"
+              style="left:50%;top:42%;width:46.74%;height:24.33%"></button>
+            <button class="zone" data-room="atelier" aria-label="아틀리에부 열기"
+              style="left:3.26%;top:67.33%;width:93.49%;height:30.33%"></button>
           </div>
 
           <!-- 3) 가구 · 식물 -->
@@ -944,146 +1010,180 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
               </symbol>
             </defs>
 
-            <!-- ===== 공고 탐색실 ===== -->
+            <!-- ===== 밍밍 사장실 ===== -->
             <g>
-              <ellipse cx="72" cy="128" rx="50" ry="8" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
-              <rect x="24" y="98" width="96" height="26" rx="5" fill="#E9D5B6" stroke="#DCC6A3"/>
-              <rect x="24" y="98" width="96" height="6" rx="3" fill="#F1E0C6"/>
-              <g>
-                <rect x="30" y="105" width="7" height="15" rx="1.5" fill="#8FAE8C"/>
-                <rect x="39" y="107" width="6" height="13" rx="1.5" fill="#D8A48A"/>
-                <rect x="47" y="104" width="7" height="16" rx="1.5" fill="#C7B58E"/>
-                <rect x="56" y="108" width="5" height="12" rx="1.5" fill="#9FB8C9"/>
-                <rect x="63" y="105" width="7" height="15" rx="1.5" fill="#E3B7B0"/>
-                <rect x="72" y="107" width="6" height="13" rx="1.5" fill="#B9CDB4"/>
-                <rect x="80" y="104" width="7" height="16" rx="1.5" fill="#D9C6A2"/>
-                <rect x="89" y="108" width="6" height="12" rx="1.5" fill="#8FAE8C"/>
-                <rect x="97" y="106" width="6" height="14" rx="1.5" fill="#CBA9A0"/>
-                <rect x="105" y="108" width="9" height="12" rx="1.5" fill="#A9C0A4"/>
-              </g>
+              <ellipse cx="110" cy="118" rx="92" ry="26" fill="#FFF4DA" opacity=".62" filter="url(#sf)"/>
+              <ellipse cx="108" cy="200" rx="78" ry="34" fill="#F5E9D6" opacity=".9"/>
+              <ellipse cx="108" cy="200" rx="64" ry="26" fill="none" stroke="#EADCC2" stroke-width="1.4"/>
+              <ellipse cx="112" cy="196" rx="66" ry="9" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
 
-              <!-- 코르크 보드 -->
-              <rect x="128" y="96" width="70" height="36" rx="5" fill="#EFDCBC" stroke="#DFC9A4"/>
-              <rect x="132" y="100" width="62" height="28" rx="3" fill="#E4CDA6" opacity=".7"/>
-              <rect x="136" y="103" width="19" height="21" rx="1.5" fill="#FFFDF6"/>
-              <rect x="158" y="103" width="19" height="21" rx="1.5" fill="#FFFDF6"/>
-              <rect x="180" y="106" width="12" height="15" rx="1.5" fill="#FFFDF6"/>
-              <g stroke="#C9D6C5" stroke-width=".9">
-                <path d="M139 108h13M139 111h13M139 114h9M161 108h13M161 111h13M161 114h9M183 111h7M183 114h6"/>
-              </g>
-              <circle cx="145" cy="103" r="1.4" fill="#D89A8C"/>
-              <circle cx="167" cy="103" r="1.4" fill="#8FAE8C"/>
-              <circle cx="186" cy="106" r="1.4" fill="#C9A46C"/>
+              <!-- 대표 의자 (책상 뒤) -->
+              <rect x="86" y="126" width="44" height="16" rx="8" fill="#EADFC8" stroke="#DBCDAE"/>
+              <rect x="91" y="129" width="34" height="10" rx="5" fill="#F6EEDC"/>
 
-              <!-- 데스크 -->
-              <ellipse cx="92" cy="217" rx="68" ry="10" fill="#B39A78" opacity=".17" filter="url(#sf)"/>
-              <rect x="30" y="158" width="124" height="58" rx="10" fill="#FFFEFB" stroke="#E6DFD0"/>
-              <rect x="33" y="161" width="118" height="52" rx="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity=".85"/>
-              <!-- 모니터(위에서 본 형태) -->
-              <rect x="44" y="167" width="54" height="8" rx="2.6" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
-              <rect x="47" y="168.6" width="48" height="4.6" rx="1.6" fill="#EAF3F5"/>
-              <rect x="68" y="175" width="7" height="4" rx="1.4" fill="#CBD8DB"/>
-              <!-- 키보드 -->
-              <rect x="50" y="184" width="42" height="13" rx="3" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
-              <g stroke="#DED8C9" stroke-width=".8"><path d="M54 187.5h34M54 190.5h34M54 193.5h24"/></g>
-              <!-- 서류 -->
-              <rect x="102" y="178" width="34" height="24" rx="2.4" fill="#FFFEF8" stroke="#E7E0D1" stroke-width=".9"/>
-              <rect x="105" y="182" width="28" height="17" rx="1.4" fill="#FCFBF4"/>
-              <g stroke="#C9D6C5" stroke-width=".9"><path d="M108 186h20M108 189.5h20M108 193h13"/></g>
-              <!-- 머그 -->
-              <circle cx="141" cy="170" r="5.6" fill="#E7B7B2"/>
-              <circle cx="141" cy="170" r="3.4" fill="#F5DAD6"/>
-              <path d="M146 170h3.4" stroke="#DBAAA5" stroke-width="1.4" stroke-linecap="round"/>
-              <!-- 펜 -->
-              <rect x="104" y="205" width="22" height="2.6" rx="1.3" fill="#8FAE8C" transform="rotate(-8 115 206)"/>
+              <!-- 대표 책상 (화이트 · 우드) -->
+              <rect x="40" y="142" width="136" height="52" rx="12" fill="#E3C9A2" opacity=".55"/>
+              <rect x="42" y="144" width="132" height="48" rx="11" fill="#FFFDF6" stroke="#DCC29A"/>
+              <rect x="45" y="147" width="126" height="42" rx="9" fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity=".9"/>
+              <rect x="42" y="184" width="132" height="9" rx="4.5" fill="#DFC297"/>
+              <rect x="42" y="184" width="132" height="3" rx="1.5" fill="#EFDCBC"/>
+              <path d="M44 190h128" stroke="#CDAE80" stroke-width=".8" opacity=".7"/>
+              <!-- 책상 위 소품: 서류 묶음 -->
+              <rect x="100" y="176" width="26" height="12" rx="2" fill="#F7EEDD" stroke="#E4D3B3" stroke-width=".8"/>
+              <rect x="102" y="178" width="22" height="8" rx="1.4" fill="#FFFDF6"/>
+              <!-- 데스크 램프 -->
+              <circle cx="159" cy="172" r="6" fill="#F3DFA6" stroke="#D9BC77" stroke-width=".9"/>
+              <circle cx="159" cy="172" r="2.8" fill="#FFF6D8"/>
+              <path d="M159 178v8" stroke="#D9BC77" stroke-width="1.6" stroke-linecap="round"/>
+              <rect x="155" y="185" width="8" height="2.6" rx="1.3" fill="#D9BC77"/>
 
-              <!-- 의자 -->
-              <rect x="76" y="220" width="42" height="17" rx="8" fill="#DCE7D7" stroke="#C7D9C0"/>
-              <rect x="81" y="224" width="32" height="9" rx="4.5" fill="#E8F0E3"/>
-
-              <!-- 소품 화분 -->
-              <use href="#pl-pot" x="172" y="204" width="26" height="30"/>
-              <use href="#pl-fern" x="146" y="222" width="22" height="22"/>
-            </g>
-
-            <!-- ===== 온실 라운지 ===== -->
-            <g>
-              <ellipse cx="312" cy="196" rx="92" ry="48" fill="#F2EDDE" opacity=".95"/>
-              <ellipse cx="312" cy="196" rx="76" ry="38" fill="none" stroke="#E7DFCB" stroke-width="1.4"/>
-              <ellipse cx="352" cy="160" rx="56" ry="10" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
-
-              <!-- 라탄 소파 -->
-              <rect x="302" y="110" width="106" height="50" rx="15" fill="#EBDCC0" stroke="#DBC7A2"/>
-              <rect x="302" y="110" width="106" height="13" rx="6.5" fill="#F3E7D0"/>
-              <rect x="308" y="124" width="30" height="30" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
-              <rect x="340" y="124" width="30" height="30" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
-              <rect x="372" y="124" width="30" height="30" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
-              <g stroke="#DFCFB0" stroke-width="1"><path d="M306 116h98M306 150h98"/></g>
-
-              <!-- 원형 티테이블 -->
-              <circle cx="298" cy="180" r="17" fill="#E1C8A2" stroke="#D1B78D"/>
-              <circle cx="298" cy="180" r="12" fill="#EDDCC0"/>
-              <circle cx="294" cy="176" r="4.6" fill="#CFE0CB" stroke="#B9CDB4" stroke-width=".8"/>
-              <path d="M298.6 176h2.8" stroke="#B9CDB4" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="304" cy="185" r="3.2" fill="#FFFDF7" stroke="#E3D8C4" stroke-width=".8"/>
-
-              <!-- 식물 -->
-              <use href="#pl-strelitzia" x="226" y="98" width="46" height="66"/>
-              <use href="#pl-monstera" x="368" y="186" width="48" height="62"/>
-              <use href="#pl-pot" x="214" y="208" width="26" height="30"/>
-              <use href="#pl-fern" x="342" y="200" width="26" height="26"/>
-
-              <!-- 유리 선반 -->
-              <rect x="392" y="96" width="6" height="42" rx="3" fill="#EFE7D6" opacity=".8"/>
-            </g>
-
-            <!-- ===== 보들몽 지휘실 ===== -->
-            <g>
-              <ellipse cx="215" cy="336" rx="106" ry="56" fill="#F3E7CF" opacity=".9"/>
-              <ellipse cx="215" cy="336" rx="90" ry="46" fill="none" stroke="#E7D8B8" stroke-width="1.5"/>
-              <ellipse cx="215" cy="336" rx="72" ry="35" fill="none" stroke="#E7D8B8" stroke-width="1"/>
-
-              <ellipse cx="226" cy="368" rx="82" ry="11" fill="#B39A78" opacity=".18" filter="url(#sf)"/>
-              <!-- 화이트 데스크 -->
-              <rect x="150" y="308" width="150" height="58" rx="12" fill="#FFFEFC" stroke="#E6DFD0"/>
-              <rect x="153" y="311" width="144" height="52" rx="10" fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity=".9"/>
               <!-- 모니터 -->
-              <rect x="172" y="316" width="58" height="9" rx="3" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
-              <rect x="175" y="317.8" width="52" height="5.4" rx="1.8" fill="#EAF3F5"/>
-              <rect x="197" y="325" width="8" height="4" rx="1.4" fill="#CBD8DB"/>
+              <rect x="60" y="152" width="52" height="8" rx="2.6" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
+              <rect x="63" y="153.8" width="46" height="4.6" rx="1.6" fill="#EAF3F5"/>
+              <rect x="82" y="160" width="7" height="4" rx="1.4" fill="#CBD8DB"/>
               <!-- 키보드 -->
-              <rect x="178" y="334" width="46" height="13" rx="3" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
-              <g stroke="#DED8C9" stroke-width=".8"><path d="M182 337.5h38M182 340.5h38M182 343.5h26"/></g>
-              <!-- 수첩 -->
-              <rect x="232" y="334" width="34" height="24" rx="2.6" fill="#FFFEF8" stroke="#E7E0D1" stroke-width=".9"/>
-              <rect x="235" y="338" width="28" height="17" rx="1.4" fill="#FCFBF4"/>
-              <g stroke="#C9D6C5" stroke-width=".9"><path d="M238 342h20M238 345.5h20M238 349h14"/></g>
-              <!-- 컵 · 화분 -->
-              <circle cx="278" cy="320" r="5.6" fill="#CFE0CB"/>
-              <circle cx="278" cy="320" r="3.4" fill="#E8F1E4"/>
-              <use href="#pl-pot" x="288" y="334" width="26" height="30"/>
-              <!-- 펜 -->
-              <rect x="236" y="364" width="24" height="2.6" rx="1.3" fill="#D8A48A" transform="rotate(-6 248 365)"/>
-
-              <!-- 의자 -->
-              <rect x="198" y="370" width="52" height="18" rx="9" fill="#DCE7D7" stroke="#C7D9C0"/>
-              <rect x="204" y="374" width="40" height="10" rx="5" fill="#E9F1E4"/>
+              <rect x="66" y="168" width="40" height="11" rx="3" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
+              <g stroke="#DED8C9" stroke-width=".8"><path d="M70 171.5h32M70 174.5h32M70 177.5h22"/></g>
+              <!-- 금색 명패 -->
+              <rect x="112" y="164" width="32" height="11" rx="2.2" fill="#EFD79C" stroke="#DFC178" stroke-width=".9"/>
+              <path d="M119 169.5h18" stroke="#C8A862" stroke-width="1" opacity=".75"/>
+              <!-- 머그 · 펜 -->
+              <circle cx="160" cy="155" r="5.2" fill="#D9C7A6"/>
+              <circle cx="160" cy="155" r="3.1" fill="#F2E7CE"/>
+              <rect x="118" y="181" width="22" height="2.4" rx="1.2" fill="#B9A47C" transform="rotate(-5 129 182)"/>
 
               <!-- 옆 책장 -->
-              <rect x="102" y="304" width="32" height="58" rx="5" fill="#E9D5B6" stroke="#DCC6A3"/>
-              <rect x="102" y="304" width="32" height="6" rx="3" fill="#F1E0C6"/>
+              <rect x="20" y="146" width="16" height="46" rx="3" fill="#E9D5B6" stroke="#DCC6A3"/>
+              <rect x="20" y="146" width="16" height="5" rx="2.5" fill="#F1E0C6"/>
               <g>
-                <rect x="106" y="312" width="6" height="15" rx="1.4" fill="#8FAE8C"/>
-                <rect x="114" y="314" width="6" height="13" rx="1.4" fill="#D8A48A"/>
-                <rect x="122" y="311" width="6" height="16" rx="1.4" fill="#C7B58E"/>
-                <rect x="106" y="332" width="6" height="15" rx="1.4" fill="#9FB8C9"/>
-                <rect x="114" y="334" width="6" height="13" rx="1.4" fill="#B9CDB4"/>
-                <rect x="122" y="331" width="6" height="16" rx="1.4" fill="#E3B7B0"/>
+                <rect x="23" y="153" width="4" height="12" rx="1.2" fill="#8FAE8C"/>
+                <rect x="23" y="168" width="4" height="12" rx="1.2" fill="#D8A48A"/>
+                <rect x="29" y="155" width="4" height="10" rx="1.2" fill="#C7B58E"/>
+                <rect x="29" y="169" width="4" height="10" rx="1.2" fill="#9FB8C9"/>
               </g>
-              <use href="#pl-fern" x="306" y="364" width="26" height="26"/>
-              <!-- 푸프 쿠션 -->
-              <ellipse cx="156" cy="380" rx="22" ry="15" fill="#EFE3CE" stroke="#DECFB4"/>
-              <ellipse cx="156" cy="377" rx="17" ry="10" fill="#F8F0E0"/>
+
+              <!-- 햇살 드는 자리 · 화분 -->
+              <use href="#pl-monstera" x="168" y="170" width="34" height="48"/>
+              <use href="#pl-pot" x="150" y="190" width="22" height="26"/>
+              <use href="#pl-fern" x="24" y="198" width="24" height="24"/>
+            </g>
+
+            <!-- ===== 보들몽 비서실 ===== -->
+            <g>
+              <ellipse cx="262" cy="128" rx="50" ry="8" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
+              <rect x="214" y="98" width="96" height="26" rx="5" fill="#E9D5B6" stroke="#DCC6A3"/>
+              <rect x="214" y="98" width="96" height="6" rx="3" fill="#F1E0C6"/>
+              <g>
+                <rect x="220" y="105" width="7" height="15" rx="1.5" fill="#8FAE8C"/>
+                <rect x="229" y="107" width="6" height="13" rx="1.5" fill="#D8A48A"/>
+                <rect x="237" y="104" width="7" height="16" rx="1.5" fill="#C7B58E"/>
+                <rect x="246" y="108" width="5" height="12" rx="1.5" fill="#9FB8C9"/>
+                <rect x="253" y="105" width="7" height="15" rx="1.5" fill="#E3B7B0"/>
+                <rect x="262" y="107" width="6" height="13" rx="1.5" fill="#B9CDB4"/>
+                <rect x="270" y="104" width="7" height="16" rx="1.5" fill="#D9C6A2"/>
+                <rect x="279" y="108" width="6" height="12" rx="1.5" fill="#8FAE8C"/>
+                <rect x="287" y="106" width="6" height="14" rx="1.5" fill="#CBA9A0"/>
+                <rect x="295" y="108" width="9" height="12" rx="1.5" fill="#A9C0A4"/>
+              </g>
+
+              <!-- 일정 · 보고 보드 -->
+              <rect x="318" y="96" width="70" height="36" rx="5" fill="#EFDCBC" stroke="#DFC9A4"/>
+              <rect x="322" y="100" width="62" height="28" rx="3" fill="#E4CDA6" opacity=".7"/>
+              <rect x="326" y="103" width="19" height="21" rx="1.5" fill="#FFFDF6"/>
+              <rect x="348" y="103" width="19" height="21" rx="1.5" fill="#FFFDF6"/>
+              <rect x="370" y="106" width="12" height="15" rx="1.5" fill="#FFFDF6"/>
+              <g stroke="#C9D6C5" stroke-width=".9">
+                <path d="M329 108h13M329 111h13M329 114h9M351 108h13M351 111h13M351 114h9M373 111h7M373 114h6"/>
+              </g>
+              <circle cx="335" cy="103" r="1.4" fill="#D89A8C"/>
+              <circle cx="357" cy="103" r="1.4" fill="#8FAE8C"/>
+              <circle cx="376" cy="106" r="1.4" fill="#C9A46C"/>
+
+              <!-- 책상 -->
+              <ellipse cx="282" cy="217" rx="68" ry="10" fill="#B39A78" opacity=".17" filter="url(#sf)"/>
+              <rect x="220" y="158" width="124" height="58" rx="10" fill="#FFFEFB" stroke="#E6DFD0"/>
+              <rect x="223" y="161" width="118" height="52" rx="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity=".85"/>
+              <rect x="234" y="167" width="54" height="8" rx="2.6" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
+              <rect x="237" y="168.6" width="48" height="4.6" rx="1.6" fill="#EAF3F5"/>
+              <rect x="258" y="175" width="7" height="4" rx="1.4" fill="#CBD8DB"/>
+              <rect x="240" y="184" width="42" height="13" rx="3" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
+              <g stroke="#DED8C9" stroke-width=".8"><path d="M244 187.5h34M244 190.5h34M244 193.5h24"/></g>
+              <rect x="292" y="178" width="34" height="24" rx="2.4" fill="#FFFEF8" stroke="#E7E0D1" stroke-width=".9"/>
+              <rect x="295" y="182" width="28" height="17" rx="1.4" fill="#FCFBF4"/>
+              <g stroke="#C9D6C5" stroke-width=".9"><path d="M298 186h20M298 189.5h20M298 193h13"/></g>
+              <circle cx="331" cy="170" r="5.6" fill="#E7B7B2"/>
+              <circle cx="331" cy="170" r="3.4" fill="#F5DAD6"/>
+              <path d="M336 170h3.4" stroke="#DBAAA5" stroke-width="1.4" stroke-linecap="round"/>
+              <rect x="294" y="205" width="22" height="2.6" rx="1.3" fill="#8FAE8C" transform="rotate(-8 305 206)"/>
+
+              <!-- 의자 -->
+              <rect x="266" y="220" width="42" height="17" rx="8" fill="#DCE7D7" stroke="#C7D9C0"/>
+              <rect x="271" y="224" width="32" height="9" rx="4.5" fill="#E8F0E3"/>
+
+              <!-- 소품 화분 -->
+              <use href="#pl-pot" x="362" y="204" width="26" height="30"/>
+              <use href="#pl-fern" x="336" y="222" width="22" height="22"/>
+            </g>
+
+            <!-- ===== 공고탐색부 (모아 · 골라) ===== -->
+            <g>
+              <ellipse cx="108" cy="318" rx="88" ry="44" fill="#F2EDE0" opacity=".9"/>
+              <ellipse cx="108" cy="318" rx="72" ry="34" fill="none" stroke="#E7DFCB" stroke-width="1.3"/>
+
+              <!-- 코르크 보드 -->
+              <rect x="30" y="262" width="84" height="34" rx="5" fill="#EFDCBC" stroke="#DFC9A4"/>
+              <rect x="34" y="266" width="76" height="26" rx="3" fill="#E4CDA6" opacity=".7"/>
+              <rect x="38" y="269" width="20" height="20" rx="1.5" fill="#FFFDF6"/>
+              <rect x="61" y="269" width="20" height="20" rx="1.5" fill="#FFFDF6"/>
+              <rect x="84" y="272" width="22" height="15" rx="1.5" fill="#FFFDF6"/>
+              <g stroke="#C9D6C5" stroke-width=".9"><path d="M41 273h14M41 276h14M41 279h10M64 273h14M64 276h14M64 279h10M87 277h16M87 280h12"/></g>
+              <circle cx="47" cy="269" r="1.4" fill="#D89A8C"/>
+              <circle cx="70" cy="269" r="1.4" fill="#8FAE8C"/>
+
+              <!-- 의자 (책상 뒤) -->
+              <rect x="58" y="292" width="34" height="14" rx="7" fill="#DCE7D7" stroke="#C7D9C0"/>
+              <rect x="128" y="292" width="34" height="14" rx="7" fill="#DCE7D7" stroke="#C7D9C0"/>
+
+              <!-- 두 자리 책상 -->
+              <ellipse cx="108" cy="346" rx="74" ry="10" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
+              <rect x="38" y="306" width="140" height="34" rx="8" fill="#FFFEFB" stroke="#E6DFD0"/>
+              <rect x="41" y="309" width="134" height="28" rx="6" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity=".85"/>
+              <rect x="48" y="313" width="42" height="7" rx="2.2" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
+              <rect x="54" y="326" width="32" height="9" rx="2.6" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
+              <rect x="126" y="313" width="42" height="7" rx="2.2" fill="#D9E4E7" stroke="#C6D5D9" stroke-width=".8"/>
+              <rect x="132" y="326" width="32" height="9" rx="2.6" fill="#F3F0E8" stroke="#E6E1D4" stroke-width=".9"/>
+              <rect x="100" y="318" width="26" height="16" rx="2" fill="#FFFEF8" stroke="#E7E0D1" stroke-width=".9"/>
+              <g stroke="#C9D6C5" stroke-width=".9"><path d="M103 322h20M103 325h20M103 328h13"/></g>
+              <use href="#pl-pot" x="170" y="324" width="22" height="26"/>
+              <use href="#pl-fern" x="20" y="356" width="24" height="24"/>
+            </g>
+
+            <!-- ===== 운영지원부 (콩콩 · 하루) ===== -->
+            <g>
+              <ellipse cx="312" cy="330" rx="92" ry="50" fill="#F2EDDE" opacity=".95"/>
+              <ellipse cx="312" cy="330" rx="76" ry="40" fill="none" stroke="#E7DFCB" stroke-width="1.4"/>
+              <ellipse cx="352" cy="288" rx="56" ry="10" fill="#B39A78" opacity=".16" filter="url(#sf)"/>
+
+              <!-- 라탄 소파 -->
+              <rect x="300" y="262" width="106" height="46" rx="14" fill="#EBDCC0" stroke="#DBC7A2"/>
+              <rect x="300" y="262" width="106" height="12" rx="6" fill="#F3E7D0"/>
+              <rect x="306" y="275" width="30" height="28" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
+              <rect x="338" y="275" width="30" height="28" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
+              <rect x="370" y="275" width="30" height="28" rx="8" fill="#F8F1E2" stroke="#EADFCC"/>
+              <g stroke="#DFCFB0" stroke-width="1"><path d="M304 268h98M304 302h98"/></g>
+
+              <!-- 원형 티테이블 -->
+              <circle cx="290" cy="326" r="16" fill="#E1C8A2" stroke="#D1B78D"/>
+              <circle cx="290" cy="326" r="11" fill="#EDDCC0"/>
+              <circle cx="286" cy="322" r="4.4" fill="#CFE0CB" stroke="#B9CDB4" stroke-width=".8"/>
+              <path d="M290.6 322h2.6" stroke="#B9CDB4" stroke-width="1.2" stroke-linecap="round"/>
+
+              <!-- 식물 -->
+              <use href="#pl-strelitzia" x="356" y="308" width="42" height="62"/>
+              <use href="#pl-monstera" x="222" y="248" width="44" height="58"/>
+              <use href="#pl-pot" x="252" y="330" width="24" height="28"/>
+              <use href="#pl-fern" x="330" y="336" width="24" height="24"/>
+              <rect x="392" y="258" width="6" height="40" rx="3" fill="#EFE7D6" opacity=".8"/>
             </g>
 
             <!-- ===== 보태니컬 아틀리에 ===== -->
@@ -1174,10 +1274,11 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
           <!-- 4-1) 공간 이름표 -->
           <div class="zone-labels" aria-hidden="true">
-            <span class="zlabel" style="left:4.88%;top:16.5%"><b>🔎</b>공고 탐색실</span>
-            <span class="zlabel" style="left:51.63%;top:16.5%"><b>🪴</b>온실 라운지</span>
-            <span class="zlabel" style="left:23.95%;top:42.83%"><b>🌸</b>보들몽 지휘실</span>
-            <span class="zlabel" style="left:4.88%;top:67.83%"><b>🎨</b>보태니컬 아틀리에</span>
+            <span class="zlabel" style="left:4.88%;top:16.6%"><b>👑</b>밍밍 사장실</span>
+            <span class="zlabel" style="left:51.63%;top:16.6%"><b>🌸</b>보들몽 비서실</span>
+            <span class="zlabel" style="left:4.88%;top:43.3%"><b>🔎</b>공고탐색부</span>
+            <span class="zlabel" style="left:51.63%;top:43.3%"><b>🪴</b>운영지원부</span>
+            <span class="zlabel" style="left:4.88%;top:68.6%"><b>🎨</b>아틀리에부</span>
           </div>
 
           <!-- 5) 빛 -->
@@ -1217,7 +1318,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       </div>
 
       <div class="map-foot">
-        <span><span class="dot"></span>보들몽이 지금 <b>4개 공간</b>을 돌보고 있어요</span>
+        <span><span class="dot"></span>밍밍 사장님 · 직원 6명이 <b>5개 공간</b>에서 일해요</span>
         <span>다음 점검 <b>20:00</b></span>
       </div>
 
@@ -1232,6 +1333,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       </div>
       <div class="filters" id="filters"></div>
       <div class="job-list" id="jobList"></div>
+      <div class="deleted-bar" id="deletedBar" hidden></div>
       <p class="dash-foot">공고는 보들몽이 직접 확인한 것만 담았어요 · 마감일은 자동으로 다시 계산돼요</p>
       <p class="app-foot">🌿 밍밍 AI 오피스 · 보태니컬 스튜디오 프로토타입</p>
     </section>
@@ -1294,11 +1396,15 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     <div class="sheet-emoji" id="shEmoji"></div>
     <div>
       <h2 id="shTitle"></h2>
-      <p><span class="p"></span><span id="shStatus"></span></p>
+      <p><span class="p"></span><span id="shDept"></span><span id="shStatus"></span></p>
     </div>
     <button class="sheet-close" id="shClose" aria-label="닫기">✕</button>
   </div>
   <div class="sheet-body">
+    <div class="block">
+      <h3>부서 · 직원</h3>
+      <div class="staff" id="shStaff"></div>
+    </div>
     <div class="block">
       <h3>지금 하는 일</h3>
       <p class="now" id="shNow"></p>
@@ -1319,6 +1425,12 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
   </div>
 </section>
 
+<!-- 삭제 토스트 -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span id="toastText">공고를 삭제했어요</span>
+  <button type="button" id="toastUndo">되돌리기</button>
+</div>
+
 <script>
 /* ============================================================
    밍밍 AI 오피스 — app.js (inline)
@@ -1333,7 +1445,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
   var VB = { w: 430, h: 600 };
 
   /* ---------- 암호문 (평문 데이터는 이 파일에 없다) ---------- */
-  var ENC = /*ENC-DATA-BEGIN*/{"v": 1, "alg": "AES-256-GCM", "kdf": "PBKDF2-SHA256", "iter": 100000, "salt": "XbNrdFTgg4NVCh7TrpARnA==", "iv": "CTUCFmGtS+lJUX96", "ct": "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"}/*ENC-DATA-END*/;
+  var ENC = /*ENC-DATA-BEGIN*/{"v": 1, "alg": "AES-256-GCM", "kdf": "PBKDF2-SHA256", "iter": 100000, "salt": "dv6o3U/XkVDKQpLHCU0b9g==", "iv": "O6D+19tuJkQs8RTv", "ct": "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"}/*ENC-DATA-END*/;
 
   /* ---------- 복호화된 데이터 (잠그면 즉시 비운다) ---------- */
   var DATA = null;
@@ -1545,6 +1657,9 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     $('#chars').innerHTML = '';
     $('#jobList').innerHTML = '';
     $('#filters').innerHTML = '';
+    $('#deletedBar').hidden = true;
+    $('#deletedBar').innerHTML = '';
+    hideToast();
     $('#calGrid').innerHTML = '';
     $('#dpList').innerHTML = '';
     $('#routineList').innerHTML = '';
@@ -1552,7 +1667,9 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     $('#shPills').innerHTML = '';
     $('#shReports').innerHTML = '';
     $('#shTitle').textContent = '';
+    $('#shDept').textContent = '';
     $('#shStatus').textContent = '';
+    $('#shStaff').innerHTML = '';
     $('#shEmoji').textContent = '';
     $('#memo').value = '';
     $('#memoState').textContent = '';
@@ -1568,7 +1685,33 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
      캐릭터
      ============================================================ */
   function sprite(c) {
-    return c.kind === 'bodlemon' ? bossSprite(c) : helperSprite(c);
+    if (c.kind === 'bodlemon') return bossSprite(c);
+    if (c.kind === 'ceo') return ceoSprite(c);
+    return helperSprite(c);
+  }
+
+  /* 밍밍 — 크림빛 사장 캐릭터 (작은 왕관 + 잎) */
+  function ceoSprite(c) {
+    var skin = c.skin, dark = c.dark;
+    return '' +
+      '<ellipse cx="32" cy="69" rx="16" ry="3.6" fill="#6B5B4A" opacity=".13"/>' +
+      '<rect x="14.5" y="29" width="35" height="35" rx="16.5" fill="' + skin + '"/>' +
+      '<circle cx="32" cy="32" r="16.2" fill="' + skin + '"/>' +
+      '<path d="M21.8 19.4l1.5-7.2 4.5 4.3L32 10.4l4.2 6.1 4.5-4.3 1.5 7.2z" fill="#F2D383" stroke="#D6AB55" stroke-width="1.1" stroke-linejoin="round"/>' +
+      '<rect x="21.8" y="18.2" width="20.4" height="3.2" rx="1.6" fill="#F9E7B4" stroke="#D6AB55" stroke-width=".7"/>' +
+      '<circle cx="32" cy="13.4" r="1.2" fill="#FFF9E6"/>' +
+      '<path d="M44.2 26.2c4.8-2.6 8.6-1.4 10.8 1.6-3.2 2.6-7.8 2.8-10.8-1.6z" fill="#8CBB84"/>' +
+      '<path d="M44.2 26.2c1.8-1.7 2.2-4.3 1.2-6.6" stroke="#6E9E6A" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="20.6" cy="38" rx="4.2" ry="2.6" fill="' + dark + '" opacity=".34"/>' +
+      '<ellipse cx="43.4" cy="38" rx="4.2" ry="2.6" fill="' + dark + '" opacity=".34"/>' +
+      '<circle cx="26" cy="32" r="2.2" fill="#3E4A3F"/><circle cx="38" cy="32" r="2.2" fill="#3E4A3F"/>' +
+      '<circle cx="26.8" cy="31.2" r=".75" fill="#fff"/><circle cx="38.8" cy="31.2" r=".75" fill="#fff"/>' +
+      '<path d="M29.4 39.4q2.6 2.6 5.2 0" stroke="#5A4048" stroke-width="1.7" fill="none" stroke-linecap="round"/>' +
+      '<path d="M24.6 44.6q7.4 3.6 14.8 0" stroke="#8CBB84" stroke-width="2.2" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="32" cy="47.4" r="1.5" fill="#EFD79C" stroke="#D6AB55" stroke-width=".6"/>' +
+      '<ellipse cx="25" cy="64.5" rx="5.4" ry="3.2" fill="' + dark + '"/>' +
+      '<ellipse cx="39" cy="64.5" rx="5.4" ry="3.2" fill="' + dark + '"/>' +
+      '<ellipse cx="13.6" cy="45" rx="4.4" ry="7.4" fill="' + skin + '" transform="rotate(-12 13.6 45)"/>';
   }
 
   /* 보들몽 — 연분홍 ㅊ 실루엣 (가로획 + ㅅ 다리) */
@@ -1710,7 +1853,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     btn.classList.toggle('off', !state.motion);
     btn.setAttribute('aria-checked', String(state.motion));
     $('#motionLabel').textContent = state.motion ? '움직임 ON' : '움직임 OFF';
-    $('#charChip').textContent = state.motion ? '👥 캐릭터 6명 ON' : '👥 캐릭터 6명 대기';
+    $('#charChip').textContent = state.motion ? '👥 캐릭터 7명 ON' : '👥 캐릭터 7명 대기';
     if (!state.motion && CHARS) {
       CHARS.forEach(function (c) { if (c.el) c.el.classList.remove('walking'); });
     }
@@ -1730,13 +1873,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
     if (!CHARS || !CHARS.length) return;
     CHARS.forEach(function (c) { if (c.el) c.el.classList.remove('show'); });
 
-    var others = CHARS.filter(function (c) { return c.kind !== 'bodlemon'; });
-    var pick;
-    if (bubbleTurn % 2 === 0 || !others.length) {
-      pick = CHARS[0];
-    } else {
-      pick = others[(bubbleTurn >> 1) % others.length];
-    }
+    var pick = CHARS[bubbleTurn % CHARS.length];
     bubbleTurn++;
 
     setTimeout(function () {
@@ -1762,7 +1899,17 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
     $('#shEmoji').textContent = r.emoji;
     $('#shTitle').textContent = r.name;
+    $('#shDept').textContent = r.dept ? r.dept + ' · ' : '';
     $('#shStatus').textContent = r.status;
+    $('#shStaff').innerHTML = (r.staff || []).map(function (s) {
+      return '<div class="staff-card">' +
+               '<span class="staff-ava">' + (s.emoji || '🌿') + '</span>' +
+               '<div class="staff-txt">' +
+                 '<div class="staff-name">' + s.name + '<span class="staff-role">' + s.role + '</span></div>' +
+                 '<p class="staff-duty">' + s.duty + '</p>' +
+               '</div>' +
+             '</div>';
+    }).join('');
     $('#shNow').textContent = r.now;
     $('#shPills').innerHTML = r.pills.map(function (p) { return '<span class="pill">' + p + '</span>'; }).join('');
     $('#shReports').innerHTML = r.reports.map(function (rp) {
@@ -1843,6 +1990,85 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
      ============================================================ */
   var activeFilter = 'all';
 
+  /* ---------- 공고 삭제 기록 (이 기기에만 · 잠가도 유지) ---------- */
+  var DEL_NAME = 'deletedJobs';
+  function jobId(j) { return (j && j.id) ? String(j.id) : (j ? 'title:' + j.title : ''); }
+  function deletedIds() {
+    var v = store.get(DEL_NAME, []);
+    if (!Array.isArray(v)) return [];
+    return v.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  function setDeletedIds(arr) {
+    var uniq = [];
+    (arr || []).forEach(function (x) { if (uniq.indexOf(x) === -1) uniq.push(x); });
+    store.set(DEL_NAME, uniq);
+    return uniq;
+  }
+  function visibleJobs(cat) {
+    if (!JOBS) return [];
+    var del = deletedIds();
+    return JOBS.filter(function (j) {
+      return del.indexOf(jobId(j)) === -1 && (cat === 'all' || j.cat === cat);
+    });
+  }
+
+  var toastTimer = null;
+  var toastJob = null;
+  function showToast(id) {
+    var t = $('#toast');
+    if (!t) return;
+    $('#toastText').textContent = '공고를 삭제했어요';
+    toastJob = id;
+    t.classList.add('on');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 6000);
+  }
+  function hideToast() {
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+    var t = $('#toast');
+    if (t) t.classList.remove('on');
+    toastJob = null;
+  }
+  function refreshJobs() {
+    renderFilters();
+    renderJobs();
+  }
+  function restoreJob(id) {
+    setDeletedIds(deletedIds().filter(function (x) { return x !== id; }));
+    refreshJobs();
+  }
+  function renderDeletedBar() {
+    var bar = $('#deletedBar');
+    if (!bar) return;
+    var n = deletedIds().length;
+    if (!JOBS || !n) { bar.hidden = true; bar.innerHTML = ''; return; }
+    bar.hidden = false;
+    bar.innerHTML = '<span>삭제한 공고 <b>' + n + '건</b></span>' +
+      '<button type="button" data-restore-all>모두 복원</button>';
+  }
+  function bindDashboard() {
+    $('#jobList').addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.job-del') : null;
+      if (!btn || !JOBS) return;
+      var id = btn.dataset.id;
+      if (deletedIds().indexOf(id) !== -1) return;
+      setDeletedIds(deletedIds().concat([id]));
+      refreshJobs();
+      showToast(id);
+    });
+    $('#toastUndo').addEventListener('click', function () {
+      if (toastJob) restoreJob(toastJob);
+      hideToast();
+    });
+    $('#deletedBar').addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('[data-restore-all]') : null;
+      if (!b) return;
+      setDeletedIds([]);
+      refreshJobs();
+      hideToast();
+    });
+  }
+
   function ddayInfo(j) {
     if (!j.deadline) return { cls: '', label: '상시' };
     var d = daysUntil(j.deadline);
@@ -1854,11 +2080,15 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
   function jobHTML(j) {
     var dd = ddayInfo(j);
+    var id = jobId(j);
     return '' +
-      '<article class="job cat-' + j.cat + '">' +
+      '<article class="job cat-' + j.cat + '" data-job="' + id + '">' +
         '<div class="job-top">' +
           '<span class="tag">' + j.catName + '</span>' +
-          '<span class="dday' + dd.cls + '">' + dd.label + '</span>' +
+          '<span class="job-right">' +
+            '<span class="dday' + dd.cls + '">' + dd.label + '</span>' +
+            '<button type="button" class="job-del" data-id="' + id + '" aria-label="공고 삭제: ' + j.title + '">×</button>' +
+          '</span>' +
         '</div>' +
         '<h3>' + j.title + '<span class="sub">' + j.sub + '</span></h3>' +
         '<div class="meta">' + j.meta.map(function (m) {
@@ -1875,7 +2105,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       ['all', '전체'], ['job', '일자리·강의'], ['contest', '공모전·지원사업'], ['free', '프리랜서·외주']
     ];
     $('#filters').innerHTML = cats.map(function (c) {
-      var n = c[0] === 'all' ? JOBS.length : JOBS.filter(function (j) { return j.cat === c[0]; }).length;
+      var n = visibleJobs(c[0]).length;
       return '<button class="fchip' + (c[0] === activeFilter ? ' on' : '') + '" data-filter="' + c[0] + '">' +
              c[1] + ' <b>' + n + '</b></button>';
     }).join('');
@@ -1891,7 +2121,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
   function renderJobs() {
     if (!JOBS) return;
-    var list = JOBS.filter(function (j) { return activeFilter === 'all' || j.cat === activeFilter; });
+    var list = visibleJobs(activeFilter);
     var order = { contest: 0, job: 1, free: 2 };
     list = list.slice().sort(function (a, b) {
       var da = a.deadline ? daysUntil(a.deadline) : 9999;
@@ -1899,7 +2129,14 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       if (da !== db) return da - db;
       return order[a.cat] - order[b.cat];
     });
-    $('#jobList').innerHTML = list.map(jobHTML).join('');
+    $('#jobList').innerHTML = list.length
+      ? list.map(jobHTML).join('')
+      : '<div class="jobs-empty">' +
+        (deletedIds().length
+          ? '지운 공고는 아래에서 되살릴 수 있어요 🌿'
+          : '이 분류에 담긴 공고가 아직 없어요 🌿') +
+        '</div>';
+    renderDeletedBar();
   }
 
   /* ============================================================
@@ -2057,6 +2294,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       state.bound = true;
       bindTabs();
       bindSheet();
+      bindDashboard();
       bindCalendar();
       $('#motionBtn').addEventListener('click', function () { setMotion(!state.motion); });
       $('#lockBtn').addEventListener('click', function () { lockStudio(); });
