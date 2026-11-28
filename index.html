@@ -2226,8 +2226,10 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       g.add(at(box(0.18, 0.44, 0.86, c1), w / 2 - 0.09, 0.4, 0));
       var ac = ['#AFC6A3', '#F0C6D0'];
       for (var j = 0; j < 2; j++) {
-        var cu = box(0.36, 0.34, 0.12, ac[j]);
-        at(cu, -w / 2 + 0.6 + j * 0.72, 0.56, -0.2); cu.rotation.z = (j ? 0.12 : -0.1); g.add(cu);
+        var cu = box(0.32, 0.32, 0.13, ac[j]);
+        at(cu, -w / 2 + 0.62 + j * 0.74, 0.64, -0.2);
+        cu.rotation.x = -0.32; cu.rotation.z = (j ? 0.1 : -0.08);
+        g.add(cu);
       }
       [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
         g.add(at(cyl(0.035, 0.03, 0.15, '#C2A377', 8), s[0] * (w / 2 - 0.14), 0.075, s[1] * 0.3));
@@ -2730,7 +2732,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       if (_glassTex) return _glassTex;
       _glassTex = canvasTex(256, 256, function (g, w, h) {
         g.clearRect(0, 0, w, h);
-        g.fillStyle = 'rgba(255,255,255,0.03)'; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,0.06)'; g.fillRect(0, 0, w, h);
         g.save();
         g.translate(w / 2, h / 2); g.rotate(-0.62); g.translate(-w / 2, -h / 2);
         var gr = g.createLinearGradient(0, 0, w, 0);
@@ -2850,6 +2852,39 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       g.rotation.y = ang;
       S.scene.add(g);
       S.shafts.push(m.material);
+      return g;
+    }
+
+    var _winPatchTex = null;
+    function winPatchTex() {
+      if (_winPatchTex) return _winPatchTex;
+      _winPatchTex = canvasTex(256, 128, function (g, w, h) {
+        g.clearRect(0, 0, w, h);
+        var gr = g.createLinearGradient(0, 0, 0, h);
+        gr.addColorStop(0, 'rgba(255,255,255,0.95)');
+        gr.addColorStop(.75, 'rgba(255,255,255,0.75)');
+        gr.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = gr;
+        g.fillRect(10, 8, w - 20, h - 8);
+        g.globalCompositeOperation = 'destination-out';
+        g.fillStyle = 'rgba(0,0,0,0.85)';
+        for (var i = 1; i < 4; i++) g.fillRect(10 + (w - 20) * i / 4 - 3, 8, 6, h - 8);
+        g.fillRect(10, h * 0.42, w - 20, 4);
+        g.globalCompositeOperation = 'source-over';
+      });
+      return _winPatchTex;
+    }
+    function sunRect(x, z, w, d, ang, y) {
+      var g = new THREE.Group();
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(w, d),
+        new THREE.MeshBasicMaterial({ map: winPatchTex(), color: '#FFE9BE', transparent: true,
+          opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending }));
+      m.rotation.x = -Math.PI / 2;
+      g.add(m);
+      g.position.set(x, y == null ? 0.028 : y, z);
+      g.rotation.y = ang;
+      S.scene.add(g);
+      S.pools.push(m.material);
       return g;
     }
 
@@ -3084,6 +3119,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
 
       /* 햇살 */
       sunPool(-2.2, -6.0, 3.0, 3.6, -0.55);
+      sunRect(-2.2, -5.5, 3.2, 2.4, -0.18);
       sunPool(-4.4, -4.6, 2.4, 2.6, -0.55, 0.085);
       sunShaft(-1.8, -6.0, 2.6, 4.6, -0.55, 0.95);
     }
@@ -3133,6 +3169,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       var fc = credenza(1.4, 0.44, 1.1, '#F7F2E6', '#E7DAC2'); at(fc, 2.05, 0, -5.3); fc.rotation.y = Math.PI / 2; g.add(fc);
       g.add(at(plant('succulent', 0.7), 2.05, 1.14, -5.3));
       sunPool(4.5, -6.2, 2.8, 3.0, -0.55);
+      sunRect(4.4, -5.9, 2.6, 1.8, -0.18);
       sunShaft(4.6, -6.4, 1.9, 3.4, -0.55, 0.95);
     }
 
@@ -3280,6 +3317,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       g.add(at(plant('herb', 0.4), -0.1, 0.93, -0.55));
       g.add(at(plant('succulent', 0.5), 0.0, 0.63, -0.55));
       sunPool(-3.2, -0.3, 3.0, 2.4, -0.55);
+      sunRect(-3.0, 0.4, 3.4, 2.0, -0.18);
       sunShaft(-3.0, -0.7, 2.2, 3.0, -0.55, 0.95);
     }
 
@@ -3395,6 +3433,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       g.add(at(plant('fern', 1.0), 5.95, 0, 3.05));
       g.add(at(plant('rubber', 1.0), -6.0, 0, 4.9));
       sunPool(1.0, 4.2, 3.6, 2.8, -0.55);
+      sunRect(0.6, 5.0, 3.6, 2.0, -0.18);
       sunPool(4.8, 5.6, 2.2, 2.2, -0.55);
       sunShaft(1.6, 3.4, 2.8, 3.8, -0.55, 0.95);
     }
