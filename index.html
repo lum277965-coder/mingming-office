@@ -3754,7 +3754,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       var brd = shelf(1.6, 1.2, 0.24, '#EBD4C4', '#FFFBF8', false); at(brd, 6.6, 1.5, -0.9);
       brd.rotation.y = -Math.PI / 2; g.add(brd);
       sunPool(3.9, 1.1, 2.4, 2.4, -0.55);
-      sc.add(g); g.userData.furn = true;
+      sc.add(g);
     }
 
     /* ---------- 캐릭터 ---------- */
@@ -4102,12 +4102,9 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       ROOM_ORDER.forEach(function (k) { buildRoom(k, R[k], rooms); });
       buildLounge(sc);
       /* 가구 그림자는 바닥을 검게 덮어서 끈다 — 접지 그림자(groundShadow)로 대신 */
-      rooms.traverse(function (o) { if (o.isMesh) o.castShadow = false; });
-      sc.traverse(function (o) { if (o.isMesh && o.parent && o.parent.userData && o.parent.userData.furn) o.castShadow = false; });
       buildPerimeter(sc);
       buildPartitions(sc);
       var chars = new THREE.Group(); sc.add(chars); S.charsRoot = chars;
-      chars.traverse(function (o) { if (o.isMesh) o.castShadow = false; });
       S.pick = [rooms, chars];
       if (S.els) S.els.querySelectorAll('.c3-room,.c3-name,.c3-bub').forEach(function (e) { e.remove(); });
       buildLabels();
