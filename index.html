@@ -1829,7 +1829,7 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
   /* ============================================================
      🧊 3D 오피스 — 화이트톤 통유리 보태니컬 스튜디오
      · 외부 CDN 없음(vendor/three.min.js + vendor/OrbitControls.js)
-     · 5개 공간 · 7명 캐릭터 · 시간대별 햇살 · 회전/확대
+     · 5개 공간 · 7명 캐릭터 · 시간대별 햇살 · 고정 아이소메트릭 시점 · 바깥 정원
      ============================================================ */
   var O3 = (function () {
     'use strict';
@@ -1839,23 +1839,23 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       ceo:        { em: '👑', name: '밍밍 사장실', x0: -6.6, x1: 0.9, z0: -7.7, z1: -1.6,
                     floor: '#E2C79E', line: '#C8AC80', fk: 'plank',
                     rug: '#F7CBD8', rugLine: '#E9A9BB', gold: true,
-                    label: [-4.95, 1.82, -2.0], cam: { d: 13.6, el: 0.90 } },
+                    label: [-4.95, 1.82, -2.0], cam: { d: 15.4 } },
       secretary:  { em: '🌸', name: '보들몽 비서실', x0: 1.5, x1: 6.55, z0: -7.7, z1: -4.3,
                     floor: '#EEDCCB', line: '#D7BFA9', fk: 'tile',
                     rug: '#F9D3E0', rugLine: '#EFB8C9',
-                    label: [2.55, 1.82, -4.5], cam: { d: 10.8, el: 0.82 } },
+                    label: [2.55, 1.82, -4.5], cam: { d: 11.8 } },
       scout:      { em: '🔎', name: '공고탐색부', x0: 1.5, x1: 6.55, z0: -3.65, z1: -0.45,
                     floor: '#DDC199', line: '#C3A578', fk: 'plank',
                     rug: '#F8E4C8', rugLine: '#E7CDA2',
-                    label: [5.35, 1.82, -0.85], cam: { d: 10.4, el: 0.82 } },
+                    label: [5.35, 1.82, -0.85], cam: { d: 11.4 } },
       greenhouse: { em: '🪴', name: '운영지원부', x0: -6.6, x1: 0.9, z0: -0.9, z1: 2.15,
                     floor: '#E8D7BF', line: '#CFBEA2', fk: 'stone',
                     rug: '#F6D0DB', rugLine: '#E9B2C0',
-                    label: [-4.45, 1.82, 0.95], cam: { d: 14.6, el: 0.86 } },
+                    label: [-4.45, 1.82, 0.95], cam: { d: 15.6 } },
       atelier:    { em: '🎨', name: '아틀리에부', x0: -6.6, x1: 6.55, z0: 2.85, z1: 6.9,
                     floor: '#E1C89F', line: '#C7AC80', fk: 'deck',
                     rug: '#F7DFC2', rugLine: '#E5C69E',
-                    label: [-2.4, 1.88, 3.3], cam: { d: 18.6, el: 0.62 } }
+                    label: [-2.4, 1.88, 3.3], cam: { d: 25.0 } }
     };
     var ROOM_ORDER = ['ceo', 'secretary', 'scout', 'greenhouse', 'atelier'];
 
