@@ -3700,6 +3700,12 @@ body.pre .lock{opacity:0 !important;visibility:hidden !important;transition:none
       canvas.addEventListener('pointerdown', onDown, { passive: true });
       canvas.addEventListener('pointerup', onUp, { passive: true });
       canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); S.ok = false; }, false);
+      canvas.addEventListener('webglcontextrestored', function () {
+        /* 컨텍스트를 잃었다 돌아오면(백그라운드·메모리 부족) 그리기를 다시 켠다 */
+        try {
+          if (S.scene && S.rd) { S.ok = true; S.ready = true; resize(); S.rd.render(S.scene, S.cam); }
+        } catch (err) { S.ok = false; }
+      }, false);
       resize();
       _v = new THREE.Vector3(); _ray = new THREE.Raycaster(); _ndc = new THREE.Vector2();
     }
